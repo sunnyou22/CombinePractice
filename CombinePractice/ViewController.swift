@@ -13,27 +13,55 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        // 데이터를 갖고 있는 프로퍼티
-//        let publisher = ["a", "b", "c", "d", "e", "f", "g"].publisher
-//
-//        // 구독방식, 데이터 스트림, 데이터 스트림 완료를 전부 하나의 모델로 뺀거
-//        let subscriber = CustomSubscribe()
-//
-//        // 구독 시작
-//        publisher.subscribe(subscriber)
+        //        // 데이터를 갖고 있는 프로퍼티
+        //        let publisher = ["a", "b", "c", "d", "e", "f", "g"].publisher
+        //
+        //        // 구독방식, 데이터 스트림, 데이터 스트림 완료를 전부 하나의 모델로 뺀거
+        //        let subscriber = CustomSubscribe()
+        //
+        //        // 구독 시작
+        //        publisher.subscribe(subscriber)
         
+        //MARK: sink 예제
+        //        let formatter = NumberFormatter()
+        //        formatter.numberStyle = .ordinal
+        //        //데이터 받음 -> 1번 스트림 변경
+        //        (1...10).publisher.map { value in
+        //            formatter.string(from: NSNumber(integerLiteral: value)) ?? ""
+        //            // 구독 -> 데이터 반영
+        //        }.sink { str in
+        //            print("데이터 스트림이 바뀜 \(str)")
+        //        }.cancel() // disposed랑 비슷함
         
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .ordinal
-        //데이터 받음 -> 1번 스트림 변경
-        (1...10).publisher.map { value in
-            formatter.string(from: NSNumber(integerLiteral: value)) ?? ""
-            // 구독 -> 데이터 반영
-        }.sink { str in
-            print("데이터 스트림이 바뀜 \(str)")
-        }.cancel() // disposed랑 비슷함
+        //MARK: PassthroughSubject
+        let subject = PassthroughSubject<String, Never>()
+        
+       //한번 담아줘야 실행이 됨 왜지? PassthroughSubject이게 클래스라서 객체를 만들어줘야하나
+        let subscriber = subject.sink { completion in
+            print("완료")
+        } receiveValue: { value in
+            print(value)
+        }
+        
+        subject.send("ㅇ ㅏ")
+        subject.send("옹")
+        
+        subject.send(completion: .finished)
     }
 }
+/*
+ { completion in
+     switch completion {
+     case .finished:
+         print("데이터 발행이 끝났다")
+     case .failure(_):
+         print("Error가 발생했습니아")
+     }
+ } receiveValue: { value in
+     print(value)
+     print("구독구독 방출방출")
+ }.cancel()
+ */
 
 class CustomSubscribe: Subscriber {
     
