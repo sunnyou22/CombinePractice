@@ -34,19 +34,34 @@ class ViewController: UIViewController {
         //        }.cancel() // disposed랑 비슷함
         
         //MARK: PassthroughSubject
-        let subject = PassthroughSubject<String, Never>()
+//        let subject = PassthroughSubject<String, Never>()
+//
+//       //한번 담아줘야 실행이 됨 왜지? PassthroughSubject이게 클래스라서 객체를 만들어줘야하나
+//        let subscriber = subject.sink { completion in
+//            print("완료")
+//        } receiveValue: { value in
+//            print(value)
+//        }
+//
+//        subject.send("ㅇ ㅏ")
+//        subject.send("옹")
+//
+//        subject.send(completion: .finished)
         
-       //한번 담아줘야 실행이 됨 왜지? PassthroughSubject이게 클래스라서 객체를 만들어줘야하나
-        let subscriber = subject.sink { completion in
-            print("완료")
-        } receiveValue: { value in
-            print(value)
+        //MARK: CurrentValueSubject
+        let currentValueSubject = CurrentValueSubject<String, Never>("UI 초기값 ")
+        let subscriber = currentValueSubject.sink { completion in
+            switch completion {
+            case .finished:
+                print("never로 하면 절대 fail이 나올 수 없음 error를 받지 않으니까")
+            }
+        } receiveValue: { str in
+            print(str, "방출")
         }
-        
-        subject.send("ㅇ ㅏ")
-        subject.send("옹")
-        
-        subject.send(completion: .finished)
+
+        currentValueSubject.send("1번 타자~")
+        currentValueSubject.send("2번 타자~")
+        currentValueSubject.send(completion: .finished)
     }
 }
 /*
