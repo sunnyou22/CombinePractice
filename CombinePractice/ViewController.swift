@@ -13,18 +13,26 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 데이터를 갖고 있는 프로퍼티
-        let publisher = ["a", "b", "c", "d", "e", "f", "g"].publisher
+//        // 데이터를 갖고 있는 프로퍼티
+//        let publisher = ["a", "b", "c", "d", "e", "f", "g"].publisher
+//
+//        // 구독방식, 데이터 스트림, 데이터 스트림 완료를 전부 하나의 모델로 뺀거
+//        let subscriber = CustomSubscribe()
+//
+//        // 구독 시작
+//        publisher.subscribe(subscriber)
         
-        // 구독방식, 데이터 스트림, 데이터 스트림 완료를 전부 하나의 모델로 뺀거
-        let subscriber = CustomSubscribe()
         
-        // 구독 시작
-        publisher.subscribe(subscriber)
-        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .ordinal
+        //데이터 받음 -> 1번 스트림 변경
+        (1...10).publisher.map { value in
+            formatter.string(from: NSNumber(integerLiteral: value)) ?? ""
+            // 구독 -> 데이터 반영
+        }.sink { str in
+            print("데이터 스트림이 바뀜 \(str)")
+        }.cancel() // disposed랑 비슷함
     }
-
-
 }
 
 class CustomSubscribe: Subscriber {
